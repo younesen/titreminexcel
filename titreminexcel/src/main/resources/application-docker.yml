@@ -1,0 +1,24 @@
+# application-docker.yml
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+server:
+  port: 9091
+
+logging:
+  file:
+    name: /app/logs/application.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+      base-path: /api/actuator
+  endpoint:
+    health:
+      show-details: always

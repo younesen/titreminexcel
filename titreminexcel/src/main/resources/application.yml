@@ -1,0 +1,19 @@
+# application.yml
+spring:
+  profiles:
+    active: dev
+  application:
+    name: titreminexcel
+  jackson:
+    date-format: com.fasterxml.jackson.databind.util.ISO8601DateFormat
+    time-zone: Europe/Paris
+
+server:
+  port: 9091
+  servlet:
+    context-path: /api
+
+logging:
+  level:
+    com.mtedd.titreminexcel: DEBUG
+    org.springframework.web: INFO
