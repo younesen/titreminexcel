@@ -1,0 +1,27 @@
+replicaCount: 1
+
+backend:
+  image: titreminexcel-backend:local
+  port: 9091
+
+frontend:
+  image: titreminexcel-frontend:local
+  port: 80
+
+service:
+  type: NodePort
+  frontendNodePort: 31337
+  backendNodePort: 31338
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: titreminexcel.local
+      paths:
+        - path: /
+          pathType: Prefix
+
+httpRoute:
+  enabled: false

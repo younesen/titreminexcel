@@ -4,23 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e02d6894-d670-4dec-b363-bccaf100efec" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/titreminexcel/.helmignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/titreminexcel/Chart.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/titreminexcel/logs/titreminexcel.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/titreminexcel/logs/titreminexcel.log.2025-10-14.0.gz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/titreminexcel/logs/titreminexcel.log.2025-10-15.0.gz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/titreminexcel/logs/titreminexcel.log.2025-10-16.0.gz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/titreminexcel/logs/titreminexcel.log.2025-10-17.0.gz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/titreminexcel/logs/titreminexcel.log.2025-10-18.0.gz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/titreminexcel/logs/titreminexcel.log.2025-10-19.0.gz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/titreminexcel/templates/backend-deployment.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/titreminexcel/templates/backend-service.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/titreminexcel/templates/frontend-deployment.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/titreminexcel/templates/frontend-service.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/titreminexcel/templates/httproute.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/titreminexcel/values.yaml" beforeDir="false" />
-    </list>
+    <list default="true" id="e02d6894-d670-4dec-b363-bccaf100efec" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
