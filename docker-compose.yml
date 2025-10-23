@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  backend:
+    build: titreminexcel
+    container_name: titreminexcel-backend
+    ports:
+      - "9091:9091"
+    networks:
+      - app-network
+
+  frontend:
+    build: ./frontend
+    container_name: titreminexcel-frontend
+    ports:
+      - "3000:80"
+    environment:
+      - REACT_APP_API_URL=http://localhost:9091
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
