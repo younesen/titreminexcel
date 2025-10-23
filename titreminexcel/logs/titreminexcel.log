@@ -1,2 +1,0 @@
-2025-10-21T15:19:36.457+01:00  INFO 34920 --- [titreminexcel] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
-2025-10-21T15:19:36.603+01:00  INFO 34920 --- [titreminexcel] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
