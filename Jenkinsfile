@@ -53,9 +53,15 @@ pipeline {
 
                     git config user.email "jenkins@ci.com"
                     git config user.name "jenkins"
-                    git add helm-charts/titreminexcel/values.yaml
-                    git commit -m "Update Helm image tags"
-                    git push origin main
+
+                    # Commit uniquement si des changements existent
+                    if ! git diff --quiet; then
+                      git add helm-charts/titreminexcel/values.yaml
+                      git commit -m "Update Helm image tags"
+                      git push origin main
+                    else
+                      echo "Aucun changement détecté, pas de commit."
+                    fi
                 '''
             }
         }
