@@ -4,8 +4,8 @@ pipeline {
     environment {
         DOCKERHUB_USER = 'younesen'
         DOCKERHUB_PASS = credentials('dockerhub-creds') // Stocké dans Jenkins
-        BACKEND_IMAGE = 'ton_dockerhub_user/titreminexcel-backend'
-        FRONTEND_IMAGE = 'ton_dockerhub_user/titreminexcel-frontend'
+        BACKEND_IMAGE = 'younesen/titreminexcel-backend'
+        FRONTEND_IMAGE = 'younesen/titreminexcel-frontend'
     }
 
     stages {
