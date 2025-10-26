@@ -1,11 +1,11 @@
 replicaCount: 1
 
 backend:
-  image: younesen/titreminexcel-backend:local
+  image: titreminexcel-backend:local
   port: 9091
 
 frontend:
-  image: younesen/titreminexcel-frontend:local
+  image: titreminexcel-frontend:local
   port: 80
 
 service:
