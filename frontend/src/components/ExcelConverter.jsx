@@ -58,7 +58,7 @@ export default function ExcelConverter() {
     alert("✅ Résultat JSON copié dans le presse-papier !");
   };
 
-  // 💾 Télécharger le JSON en fichier .json
+
   const handleDownload = () => {
     if (!jsonResult) return;
 
@@ -81,7 +81,7 @@ export default function ExcelConverter() {
         maxWidth: "900px",
         margin: "40px auto",
         padding: "30px",
-        backgroundColor: "#ffffff",
+        backgroundColor: "#ffffff", //#ffffff
         borderRadius: "12px",
         boxShadow: "0 6px 20px rgba(0,0,0,0.1)",
         textAlign: "center",
@@ -112,7 +112,7 @@ export default function ExcelConverter() {
           disabled={loading}
           style={{
             padding: "10px 25px",
-            backgroundColor: loading ? "#93c5fd" : "#2563eb",
+            backgroundColor: loading ? "#86efac" : "#16a34a",
             color: "#fff",
             border: "none",
             borderRadius: "6px",
@@ -149,7 +149,7 @@ export default function ExcelConverter() {
             }}
           />
 
-          {/* Boutons copier + télécharger */}
+
           <div
             style={{
               display: "flex",
