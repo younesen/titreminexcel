@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_USER = 'younesen'
-        DOCKERHUB_PASS = younes123EN@ // Stocké dans Jenkins
+        DOCKERHUB_PASS = credentials('dockerhub-creds') // Référence correcte aux credentials
         BACKEND_IMAGE = 'younesen/titreminexcel-backend'
         FRONTEND_IMAGE = 'younesen/titreminexcel-frontend'
     }
@@ -47,20 +47,33 @@ pipeline {
         stage('Update Helm values') {
             steps {
                 sh '''
+                    # Affiche le contenu actuel du fichier pour debug
+                    echo "=== Contenu actuel de values.yaml ==="
+                    cat helm-charts/titreminexcel/values.yaml || echo "Fichier non trouvé à cet emplacement"
+
                     # Met à jour les images backend et frontend dans values.yaml
-                    sed -i "s|image: titreminexcel-backend:.*|image: $BACKEND_IMAGE:latest|" helm-charts/titreminexcel/values.yaml
-                    sed -i "s|image: titreminexcel-frontend:.*|image: $FRONTEND_IMAGE:latest|" helm-charts/titreminexcel/values.yaml
+                    # Version plus flexible des patterns sed
+                    sed -i "s|repository:.*titreminexcel-backend.*|repository: $BACKEND_IMAGE|" helm-charts/titreminexcel/values.yaml
+                    sed -i "s|repository:.*titreminexcel-frontend.*|repository: $FRONTEND_IMAGE|" helm-charts/titreminexcel/values.yaml
+
+                    # Alternative si le format est différent
+                    # sed -i "s|image:.*backend.*|image: $BACKEND_IMAGE:latest|" helm-charts/titreminexcel/values.yaml
+                    # sed -i "s|image:.*frontend.*|image: $FRONTEND_IMAGE:latest|" helm-charts/titreminexcel/values.yaml
+
+                    echo "=== Contenu après modification ==="
+                    cat helm-charts/titreminexcel/values.yaml
 
                     git config user.email "jenkins@ci.com"
                     git config user.name "jenkins"
 
                     # Commit uniquement si des changements existent
-                    if ! git diff --quiet; then
+                    if git diff --quiet; then
+                      echo "Aucun changement détecté, pas de commit."
+                    else
+                      echo "Changements détectés, commit en cours..."
                       git add helm-charts/titreminexcel/values.yaml
                       git commit -m "Update Helm image tags"
                       git push origin main
-                    else
-                      echo "Aucun changement détecté, pas de commit."
                     fi
                 '''
             }
