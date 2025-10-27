@@ -49,39 +49,29 @@ pipeline {
         }
 
         // 🌍 Nouvelle étape : déploiement via ArgoCD
-        stage('Deploy via ArgoCD') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: "${GIT_CREDENTIALS}",
-                    usernameVariable: 'GIT_USER',
-                    passwordVariable: 'GIT_PASS'
-                )]) {
-                    dir('helm-charts/titreminexcel') {
-                        script {
-                            // Mise à jour des tags Docker dans values.yaml
-                            def backendImage = "${BACKEND_IMAGE}:latest"
-                            def frontendImage = "${FRONTEND_IMAGE}:latest"
-
-                            bat """
-                                echo Mise à jour des images Helm...
-                                powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-backend:.*', '${backendImage}' | Set-Content values.yaml"
-                                powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-frontend:.*', '${frontendImage}' | Set-Content values.yaml"
-                            """
-
-                            // Commit + Push
-                            bat """
-                                git config user.email "jenkins@ci.com"
-                                git config user.name "Jenkins CI"
-                                git add values.yaml
-                                git commit -m "CI/CD: update Helm chart images"
-                                git push https://${GIT_USER}:${GIT_PASS}@github.com/younesen/titreminexcel.git HEAD:main
-                            """
-                        }
-                    }
-                }
-            }
-        }
-    }
+ stage('Deploy via ArgoCD') {
+     steps {
+         withCredentials([usernamePassword(
+             credentialsId: 'github-creds',
+             usernameVariable: 'GIT_USER',
+             passwordVariable: 'GIT_PASS'
+         )]) {
+             dir('helm-chart') {
+                 bat """
+                     git clone https://%GIT_USER%:%GIT_PASS%@github.com/younesen/titreminexcel-helm.git
+                     cd titreminexcel-helm
+                     powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-backend:.*', 'younesen/titreminexcel-backend:latest' | Set-Content values.yaml"
+                     powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-frontend:.*', 'younesen/titreminexcel-frontend:latest' | Set-Content values.yaml"
+                     git config user.email "jenkins@ci.com"
+                     git config user.name "Jenkins CI"
+                     git add values.yaml
+                     git commit -m "Update Helm chart images"
+                     git push origin main
+                 """
+             }
+         }
+     }
+ }
 
     post {
         success {
