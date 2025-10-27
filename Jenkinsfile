@@ -49,29 +49,30 @@ pipeline {
         }
 
         // 🌍 Nouvelle étape : déploiement via ArgoCD
- stage('Deploy via ArgoCD') {
-     steps {
-         withCredentials([usernamePassword(
-             credentialsId: 'github-creds',
-             usernameVariable: 'GIT_USER',
-             passwordVariable: 'GIT_PASS'
-         )]) {
-             dir('helm-chart') {
-                 bat """
-                     git clone https://%GIT_USER%:%GIT_PASS%@github.com/younesen/titreminexcel-helm.git
-                     cd titreminexcel-helm
-                     powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-backend:.*', 'younesen/titreminexcel-backend:latest' | Set-Content values.yaml"
-                     powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-frontend:.*', 'younesen/titreminexcel-frontend:latest' | Set-Content values.yaml"
-                     git config user.email "jenkins@ci.com"
-                     git config user.name "Jenkins CI"
-                     git add values.yaml
-                     git commit -m "Update Helm chart images"
-                     git push origin main
-                 """
-             }
-         }
-     }
- }
+        stage('Deploy via ArgoCD') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'github-creds',
+                    usernameVariable: 'GIT_USER',
+                    passwordVariable: 'GIT_PASS'
+                )]) {
+                    dir('helm-chart') {
+                        bat """
+                            git clone https://%GIT_USER%:%GIT_PASS%@github.com/younesen/titreminexcel-helm.git
+                            cd titreminexcel-helm
+                            powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-backend:.*', 'younesen/titreminexcel-backend:latest' | Set-Content values.yaml"
+                            powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-frontend:.*', 'younesen/titreminexcel-frontend:latest' | Set-Content values.yaml"
+                            git config user.email "jenkins@ci.com"
+                            git config user.name "Jenkins CI"
+                            git add values.yaml
+                            git commit -m "Update Helm chart images"
+                            git push origin main
+                        """
+                    }
+                }
+            }
+        }
+    }
 
     post {
         success {
@@ -81,4 +82,4 @@ pipeline {
             echo '❌ Échec - vérifie les logs Jenkins'
         }
     }
-}
+}  // ← CETTE ACCOLADE FERMANTE ÉTAIT MANQUANTE !
