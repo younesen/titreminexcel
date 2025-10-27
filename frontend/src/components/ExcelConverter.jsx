@@ -112,7 +112,7 @@ export default function ExcelConverter() {
           disabled={loading}
           style={{
             padding: "10px 25px",
-            backgroundColor: loading ? "#86efac" : "#16a34a",
+            backgroundColor: loading ? "#e5e7eb" : "#4f46e5",
             color: "#fff",
             border: "none",
             borderRadius: "6px",
