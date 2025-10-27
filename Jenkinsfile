@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         DOCKERHUB_USER = 'younesen'
-        DOCKERHUB_PASS = credentials('dockerhub-creds') // Référence correcte aux credentials
         BACKEND_IMAGE = 'younesen/titreminexcel-backend'
         FRONTEND_IMAGE = 'younesen/titreminexcel-frontend'
     }
