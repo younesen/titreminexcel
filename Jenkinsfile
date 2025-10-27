@@ -4,7 +4,8 @@ pipeline {
     environment {
         BACKEND_IMAGE = 'younesen/titreminexcel-backend'
         FRONTEND_IMAGE = 'younesen/titreminexcel-frontend'
-        GIT_CREDENTIALS = 'github-creds'  // 🔐 ID Jenkins pour ton compte GitHub
+        ARGO_APP = 'titreminexcel'  // nom de ton application ArgoCD
+        ARGO_SERVER = 'https://argocd.example.com'  // <-- à adapter
     }
 
     stages {
@@ -48,27 +49,33 @@ pipeline {
             }
         }
 
-        // 🌍 Nouvelle étape : déploiement via ArgoCD
+        stage('Update Helm Chart') {
+            steps {
+                dir('helm-charts/titreminexcel') {
+                    bat """
+                        echo Mise à jour du fichier values.yaml...
+                        powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-backend:.*', 'younesen/titreminexcel-backend:latest' | Set-Content values.yaml"
+                        powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-frontend:.*', 'younesen/titreminexcel-frontend:latest' | Set-Content values.yaml"
+                    """
+                }
+            }
+        }
+
         stage('Deploy via ArgoCD') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'github-creds',
-                    usernameVariable: 'GIT_USER',
-                    passwordVariable: 'GIT_PASS'
+                    credentialsId: 'argocd-creds',
+                    usernameVariable: 'ARGO_USER',
+                    passwordVariable: 'ARGO_PASS'
                 )]) {
-                    dir('helm-chart') {
-                        bat """
-                            git clone https://%GIT_USER%:%GIT_PASS%@github.com/younesen/titreminexcel-helm.git
-                            cd titreminexcel-helm
-                            powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-backend:.*', 'younesen/titreminexcel-backend:latest' | Set-Content values.yaml"
-                            powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-frontend:.*', 'younesen/titreminexcel-frontend:latest' | Set-Content values.yaml"
-                            git config user.email "jenkins@ci.com"
-                            git config user.name "Jenkins CI"
-                            git add values.yaml
-                            git commit -m "Update Helm chart images"
-                            git push origin main
-                        """
-                    }
+                    bat """
+                        echo Connexion à ArgoCD...
+                        argocd login %ARGO_SERVER% --username %ARGO_USER% --password %ARGO_PASS% --insecure
+                        echo Lancement du déploiement de l'application %ARGO_APP%...
+                        argocd app sync %ARGO_APP% --grpc-web
+                        echo Vérification du statut...
+                        argocd app wait %ARGO_APP% --timeout 180 --health --sync
+                    """
                 }
             }
         }
@@ -76,10 +83,10 @@ pipeline {
 
     post {
         success {
-            echo '✅ Build, Push & Déploiement via ArgoCD terminés avec succès !'
+            echo '✅ Build, Push et Déploiement ArgoCD réussis !'
         }
         failure {
-            echo '❌ Échec - vérifie les logs Jenkins'
+            echo '❌ Erreur - Vérifie les logs Jenkins.'
         }
     }
-}  // ← CETTE ACCOLADE FERMANTE ÉTAIT MANQUANTE !
+}
