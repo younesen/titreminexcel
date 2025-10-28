@@ -5,8 +5,8 @@ pipeline {
         BACKEND_IMAGE = 'younesen/titreminexcel-backend'
         FRONTEND_IMAGE = 'younesen/titreminexcel-frontend'
         ARGO_APP = 'titreminexcel'
-        ARGO_SERVER = 'https://192.168.245.238:8081'  // Ton serveur ArgoCD
-        ARGO_PATH = 'C:\\Program Files\\argocd.exe'   // Chemin complet de argocd.exe
+        ARGO_SERVER = 'https://192.168.245.238:8081'
+        ARGO_PATH = 'C:\\Program Files\\argocd.exe'
     }
 
     stages {
@@ -71,16 +71,14 @@ pipeline {
                 )]) {
                     bat """
                         echo Connexion à ArgoCD...
-                        "C:\\Program Files\\argocd.exe" login https://192.168.245.238:8081 --username %ARGO_USER% --password %ARGO_PASS% --insecure
+                        "%ARGO_PATH%" login %ARGO_SERVER% --username %ARGO_USER% --password %ARGO_PASS% --insecure
                         echo Lancement du déploiement de l'application %ARGO_APP%...
-                        "C:\\Program Files\\argocd.exe" app sync %ARGO_APP% --grpc-web
+                        "%ARGO_PATH%" app sync %ARGO_APP% --grpc-web
                         echo Vérification du statut...
-                        "C:\\Program Files\\argocd.exe" app wait %ARGO_APP% --timeout 180 --health --sync
+                        "%ARGO_PATH%" app wait %ARGO_APP% --timeout 180 --health --sync
                     """
                 }
             }
-        }
-
         }
     }
 
