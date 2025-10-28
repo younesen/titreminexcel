@@ -71,14 +71,16 @@ pipeline {
                 )]) {
                     bat """
                         echo Connexion à ArgoCD...
-                        "& '%ARGO_PATH%' login %ARGO_SERVER% --username %ARGO_USER% --password %ARGO_PASS% --insecure"
+                        "C:\\Program Files\\argocd.exe" login https://192.168.245.238:8081 --username %ARGO_USER% --password %ARGO_PASS% --insecure
                         echo Lancement du déploiement de l'application %ARGO_APP%...
-                        "& '%ARGO_PATH%' app sync %ARGO_APP% --grpc-web"
+                        "C:\\Program Files\\argocd.exe" app sync %ARGO_APP% --grpc-web
                         echo Vérification du statut...
-                        "& '%ARGO_PATH%' app wait %ARGO_APP% --timeout 180 --health --sync"
+                        "C:\\Program Files\\argocd.exe" app wait %ARGO_APP% --timeout 180 --health --sync
                     """
                 }
             }
+        }
+
         }
     }
 
