@@ -69,16 +69,18 @@ pipeline {
                     passwordVariable: 'ARGO_PASS'
                 )]) {
                     bat """
-                        echo Connexion à ArgoCD...
-                        argocd login %ARGO_SERVER% --username %ARGO_USER% --password %ARGO_PASS% --insecure
+                        echo Connexion à ArgoCD via WSL...
+                        wsl argocd login %ARGO_SERVER% --username %ARGO_USER% --password %ARGO_PASS% --insecure
                         echo Lancement du déploiement de l'application %ARGO_APP%...
-                        argocd app sync %ARGO_APP% --grpc-web
+                        wsl argocd app sync %ARGO_APP% --grpc-web
                         echo Vérification du statut...
-                        argocd app wait %ARGO_APP% --timeout 180 --health --sync
+                        wsl argocd app wait %ARGO_APP% --timeout 180 --health --sync
                     """
                 }
             }
         }
+
+
     }
 
     post {
