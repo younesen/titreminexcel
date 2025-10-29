@@ -56,6 +56,9 @@ pipeline {
                         echo Mise à jour du fichier values.yaml...
                         powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-backend:.*', 'younesen/titreminexcel-backend:latest' | Set-Content values.yaml"
                         powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-frontend:.*', 'younesen/titreminexcel-frontend:latest' | Set-Content values.yaml"
+
+                        echo "✅ Values.yaml mis à jour"
+                        type values.yaml | findstr "image:"
                     """
                 }
             }
@@ -69,21 +72,26 @@ pipeline {
                     passwordVariable: 'ARGO_PASS'
                 )]) {
                     script {
-                        // Méthode 1 : Utilisation de l'API REST avec curl (recommandée)
+                        // Méthode 1 : Utilisation d'un token ArgoCD (Recommandée)
                         bat """
-                            echo Synchronisation de l'application %ARGO_APP%...
+                            echo "🔑 Authentification auprès d'ArgoCD..."
+                            curl -k -X POST "%ARGO_SERVER%/api/v1/session" ^
+                                -H "Content-Type: application/json" ^
+                                -d "{\\\"username\\\": \\\"%ARGO_USER%\\\", \\\"password\\\": \\\"%ARGO_PASS%\\\"}" ^
+                                -c argocd-cookie.txt
+
+                            echo "🚀 Synchronisation de l'application %ARGO_APP%..."
                             curl -k -X POST "%ARGO_SERVER%/api/v1/applications/%ARGO_APP%/sync" ^
                                 -H "Content-Type: application/json" ^
-                                -u "%ARGO_USER%:%ARGO_PASS%" ^
+                                -b argocd-cookie.txt ^
                                 -d "{\\\"revision\\\": \\\"main\\\"}"
 
-                            echo.
-                            echo Attente du déploiement (30 secondes)...
-                            timeout /t 30 /nobreak
+                            echo "⏳ Attente du déploiement..."
+                            ping -n 30 127.0.0.1 > nul
 
-                            echo Vérification du statut...
+                            echo "📊 Vérification du statut..."
                             curl -k -s "%ARGO_SERVER%/api/v1/applications/%ARGO_APP%" ^
-                                -u "%ARGO_USER%:%ARGO_PASS%" | findstr "health status"
+                                -b argocd-cookie.txt
                         """
                     }
                 }
