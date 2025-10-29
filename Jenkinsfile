@@ -70,17 +70,13 @@ stage('Deploy via ArgoCD') {
             passwordVariable: 'ARGO_PASS'
         )]) {
             bat """
-                echo "Démarrage du port-forward en arrière-plan..."
-                start /B wsl kubectl port-forward -n argocd svc/argocd-server 8081:443 --address 0.0.0.0
-                timeout /t 5
-                echo Connexion à ArgoCD...
-                wsl argocd login localhost:8081 --username %ARGO_USER% --password %ARGO_PASS% --insecure
-                echo Lancement du déploiement...
-                wsl argocd app sync %ARGO_APP% --grpc-web
-                echo Vérification du statut...
-                wsl argocd app wait %ARGO_APP% --timeout 180 --health --sync
-                echo "Arrêt du port-forward..."
-                wsl pkill -f "kubectl port-forward"
+                echo Synchronisation de l'application %ARGO_APP%...
+                curl -k -X POST "%ARGO_SERVER%/api/v1/applications/%ARGO_APP%/sync" ^
+                  -H "Content-Type: application/json" ^
+                  -u "%ARGO_USER%:%ARGO_PASS%"
+
+                echo Attente du déploiement...
+                timeout /t 30
             """
         }
     }
