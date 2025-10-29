@@ -71,11 +71,11 @@ pipeline {
                 )]) {
                     bat """
                         echo Connexion à ArgoCD...
-                        "%ARGO_PATH%" login %ARGO_SERVER% --username %ARGO_USER% --password %ARGO_PASS% --insecure
+                        wsl argocd login %ARGO_SERVER% --username %ARGO_USER% --password %ARGO_PASS% --insecure
                         echo Lancement du déploiement de l'application %ARGO_APP%...
-                        "%ARGO_PATH%" app sync %ARGO_APP% --grpc-web
+                        wsl argocd app sync %ARGO_APP% --grpc-web
                         echo Vérification du statut...
-                        "%ARGO_PATH%" app wait %ARGO_APP% --timeout 180 --health --sync
+                        wsl argocd app wait %ARGO_APP% --timeout 180 --health --sync
                     """
                 }
             }
