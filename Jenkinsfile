@@ -6,7 +6,6 @@ pipeline {
         FRONTEND_IMAGE = 'younesen/titreminexcel-frontend'
         ARGO_APP = 'titreminexcel'
         ARGO_SERVER = 'https://192.168.245.238:8081'
-        ARGO_PATH = 'C:\\Program Files\\argocd.exe'
     }
 
     stages {
@@ -62,25 +61,34 @@ pipeline {
             }
         }
 
-stage('Deploy via ArgoCD') {
-    steps {
-        withCredentials([usernamePassword(
-            credentialsId: 'argocd-creds',
-            usernameVariable: 'ARGO_USER',
-            passwordVariable: 'ARGO_PASS'
-        )]) {
-            bat """
-                echo Synchronisation de l'application %ARGO_APP%...
-                curl -k -X POST "%ARGO_SERVER%/api/v1/applications/%ARGO_APP%/sync" ^
-                  -H "Content-Type: application/json" ^
-                  -u "%ARGO_USER%:%ARGO_PASS%"
+        stage('Deploy via ArgoCD') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'argocd-creds',
+                    usernameVariable: 'ARGO_USER',
+                    passwordVariable: 'ARGO_PASS'
+                )]) {
+                    script {
+                        // Méthode 1 : Utilisation de l'API REST avec curl (recommandée)
+                        bat """
+                            echo Synchronisation de l'application %ARGO_APP%...
+                            curl -k -X POST "%ARGO_SERVER%/api/v1/applications/%ARGO_APP%/sync" ^
+                                -H "Content-Type: application/json" ^
+                                -u "%ARGO_USER%:%ARGO_PASS%" ^
+                                -d "{\\\"revision\\\": \\\"main\\\"}"
 
-                echo Attente du déploiement...
-                timeout /t 30
-            """
+                            echo.
+                            echo Attente du déploiement (30 secondes)...
+                            timeout /t 30 /nobreak
+
+                            echo Vérification du statut...
+                            curl -k -s "%ARGO_SERVER%/api/v1/applications/%ARGO_APP%" ^
+                                -u "%ARGO_USER%:%ARGO_PASS%" | findstr "health status"
+                        """
+                    }
+                }
+            }
         }
-    }
-}
     }
 
     post {
