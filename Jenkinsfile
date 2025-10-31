@@ -15,6 +15,18 @@ pipeline {
             }
         }
 
+        // 🧪 Nouvelle étape pour exécuter les tests Spring Boot
+        stage('Backend Tests') {
+            steps {
+                dir('titreminexcel') {
+                    bat """
+                        echo 🚀 Lancement des tests Maven...
+                        mvn clean test
+                    """
+                }
+            }
+        }
+
         stage('Build Backend') {
             steps {
                 dir('titreminexcel') {
@@ -57,13 +69,14 @@ pipeline {
                         powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-backend:.*', 'younesen/titreminexcel-backend:latest' | Set-Content values.yaml"
                         powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-frontend:.*', 'younesen/titreminexcel-frontend:latest' | Set-Content values.yaml"
 
-                        echo "✅ Values.yaml mis à jour"
+                        echo ✅ values.yaml mis à jour :
                         type values.yaml | findstr "image:"
                     """
                 }
             }
         }
 
+        // 🚀 Déploiement via l'API ArgoCD
         stage('Deploy via ArgoCD') {
             steps {
                 withCredentials([usernamePassword(
@@ -71,29 +84,26 @@ pipeline {
                     usernameVariable: 'ARGO_USER',
                     passwordVariable: 'ARGO_PASS'
                 )]) {
-                    script {
-                        // Méthode 1 : Utilisation d'un token ArgoCD (Recommandée)
-                        bat """
-                            echo "🔑 Authentification auprès d'ArgoCD..."
-                            curl -k -X POST "%ARGO_SERVER%/api/v1/session" ^
-                                -H "Content-Type: application/json" ^
-                                -d "{\\\"username\\\": \\\"%ARGO_USER%\\\", \\\"password\\\": \\\"%ARGO_PASS%\\\"}" ^
-                                -c argocd-cookie.txt
+                    bat """
+                        echo 🔑 Authentification auprès d'ArgoCD...
+                        curl -k -X POST "%ARGO_SERVER%/api/v1/session" ^
+                            -H "Content-Type: application/json" ^
+                            -d "{\\\"username\\\": \\\"%ARGO_USER%\\\", \\\"password\\\": \\\"%ARGO_PASS%\\\"}" ^
+                            -c argocd-cookie.txt
 
-                            echo "🚀 Synchronisation de l'application %ARGO_APP%..."
-                            curl -k -X POST "%ARGO_SERVER%/api/v1/applications/%ARGO_APP%/sync" ^
-                                -H "Content-Type: application/json" ^
-                                -b argocd-cookie.txt ^
-                                -d "{\\\"revision\\\": \\\"main\\\"}"
+                        echo 🚀 Synchronisation de l'application %ARGO_APP%...
+                        curl -k -X POST "%ARGO_SERVER%/api/v1/applications/%ARGO_APP%/sync" ^
+                            -H "Content-Type: application/json" ^
+                            -b argocd-cookie.txt ^
+                            -d "{\\\"revision\\\": \\\"main\\\"}"
 
-                            echo "⏳ Attente du déploiement..."
-                            ping -n 30 127.0.0.1 > nul
+                        echo ⏳ Attente du déploiement...
+                        ping -n 30 127.0.0.1 > nul
 
-                            echo "📊 Vérification du statut..."
-                            curl -k -s "%ARGO_SERVER%/api/v1/applications/%ARGO_APP%" ^
-                                -b argocd-cookie.txt
-                        """
-                    }
+                        echo 📊 Vérification du statut final...
+                        curl -k -s "%ARGO_SERVER%/api/v1/applications/%ARGO_APP%" ^
+                            -b argocd-cookie.txt
+                    """
                 }
             }
         }
@@ -101,10 +111,10 @@ pipeline {
 
     post {
         success {
-            echo '✅ Build, Push et Déploiement ArgoCD réussis !'
+            echo '✅ Pipeline complet réussi : tests, build, push et déploiement ArgoCD !'
         }
         failure {
-            echo '❌ Erreur - Vérifie les logs Jenkins.'
+            echo '❌ Erreur détectée - vérifie les logs Jenkins.'
         }
     }
 }
