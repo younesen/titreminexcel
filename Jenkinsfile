@@ -9,13 +9,14 @@ pipeline {
     }
 
     stages {
+
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/younesen/titreminexcel.git'
             }
         }
 
-        // 🧪 Nouvelle étape pour exécuter les tests Spring Boot
+        // 🧪 Étape 1 : Tests du backend Spring Boot
         stage('Backend Tests') {
             steps {
                 dir('titreminexcel') {
@@ -27,6 +28,7 @@ pipeline {
             }
         }
 
+        // 🏗️ Étape 2 : Build Docker du backend
         stage('Build Backend') {
             steps {
                 dir('titreminexcel') {
@@ -35,6 +37,7 @@ pipeline {
             }
         }
 
+        // 🧱 Étape 3 : Build Docker du frontend
         stage('Build Frontend') {
             steps {
                 dir('frontend') {
@@ -43,6 +46,7 @@ pipeline {
             }
         }
 
+        // 🚢 Étape 4 : Push Docker Hub
         stage('Push Images') {
             steps {
                 withCredentials([usernamePassword(
@@ -51,7 +55,7 @@ pipeline {
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
                     bat """
-                        echo Connexion à Docker Hub...
+                        echo 🔐 Connexion à Docker Hub...
                         echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
                         docker push %BACKEND_IMAGE%:latest
                         docker push %FRONTEND_IMAGE%:latest
@@ -61,11 +65,12 @@ pipeline {
             }
         }
 
+        // ⚙️ Étape 5 : Mise à jour du chart Helm
         stage('Update Helm Chart') {
             steps {
                 dir('helm-charts/titreminexcel') {
                     bat """
-                        echo Mise à jour du fichier values.yaml...
+                        echo 📝 Mise à jour du fichier values.yaml...
                         powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-backend:.*', 'younesen/titreminexcel-backend:latest' | Set-Content values.yaml"
                         powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-frontend:.*', 'younesen/titreminexcel-frontend:latest' | Set-Content values.yaml"
 
@@ -76,33 +81,25 @@ pipeline {
             }
         }
 
-        // 🚀 Déploiement via l'API ArgoCD
+        // 🚀 Étape 6 : Déploiement via ArgoCD (avec Token API)
         stage('Deploy via ArgoCD') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'argocd-creds',
-                    usernameVariable: 'ARGO_USER',
-                    passwordVariable: 'ARGO_PASS'
-                )]) {
+                withCredentials([string(credentialsId: 'argocd-token', variable: 'ARGO_TOKEN')]) {
                     bat """
-                        echo 🔑 Authentification auprès d'ArgoCD...
-                        curl -k -X POST "%ARGO_SERVER%/api/v1/session" ^
-                            -H "Content-Type: application/json" ^
-                            -d "{\\\"username\\\": \\\"%ARGO_USER%\\\", \\\"password\\\": \\\"%ARGO_PASS%\\\"}" ^
-                            -c argocd-cookie.txt
+                        echo 🔑 Déploiement via ArgoCD API avec token...
 
                         echo 🚀 Synchronisation de l'application %ARGO_APP%...
                         curl -k -X POST "%ARGO_SERVER%/api/v1/applications/%ARGO_APP%/sync" ^
+                            -H "Authorization: Bearer %ARGO_TOKEN%" ^
                             -H "Content-Type: application/json" ^
-                            -b argocd-cookie.txt ^
                             -d "{\\\"revision\\\": \\\"main\\\"}"
 
                         echo ⏳ Attente du déploiement...
                         ping -n 30 127.0.0.1 > nul
 
-                        echo 📊 Vérification du statut final...
+                        echo 📊 Vérification du statut final :
                         curl -k -s "%ARGO_SERVER%/api/v1/applications/%ARGO_APP%" ^
-                            -b argocd-cookie.txt
+                            -H "Authorization: Bearer %ARGO_TOKEN%"
                     """
                 }
             }
@@ -114,7 +111,7 @@ pipeline {
             echo '✅ Pipeline complet réussi : tests, build, push et déploiement ArgoCD !'
         }
         failure {
-            echo '❌ Erreur détectée - vérifie les logs Jenkins.'
+            echo '❌ Échec du pipeline - vérifie les logs Jenkins.'
         }
     }
 }
