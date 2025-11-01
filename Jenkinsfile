@@ -111,7 +111,23 @@ pipeline {
             echo '✅ Pipeline complet réussi : tests, build, push et déploiement ArgoCD !'
         }
         failure {
-            echo '❌ Échec du pipeline - vérifie les logs Jenkins.'
+            echo '❌ Échec du pipeline - tentative de rollback ArgoCD...'
+            script {
+                try {
+                    withCredentials([string(credentialsId: 'argocd-token', variable: 'ARGO_TOKEN')]) {
+                        bat """
+                            echo 🔁 Rollback vers la dernière version stable...
+                            curl -k -X POST "%ARGO_SERVER%/api/v1/applications/%ARGO_APP%/rollback" ^
+                                -H "Authorization: Bearer %ARGO_TOKEN%" ^
+                                -H "Content-Type: application/json" ^
+                                -d "{\\\"revision\\\": \\\"previous\\\"}"
+                        """
+                    }
+                    echo '✅ Rollback exécuté avec succès !'
+                } catch (err) {
+                    echo '⚠️ Échec du rollback ArgoCD.'
+                }
+            }
         }
     }
 }
