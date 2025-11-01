@@ -1,9 +1,9 @@
 replicaCount: 1
 
 backend:
-  image: titreminexcel-backend:local
+  image: upup
   port: 9091
-
+//titreminexcel-backend:local
 frontend:
   image: titreminexcel-frontend:local
   port: 80
