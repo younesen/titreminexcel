@@ -4,3 +4,16 @@
 2025-11-02T01:12:40.241+01:00  INFO 42352 --- [titreminexcel] [main] c.m.t.TitreminexcelApplicationTests      : No active profile set, falling back to 1 default profile: "default"
 2025-11-02T01:12:44.389+01:00  INFO 42352 --- [titreminexcel] [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
 2025-11-02T01:12:44.501+01:00  INFO 42352 --- [titreminexcel] [main] c.m.t.TitreminexcelApplicationTests      : Started TitreminexcelApplicationTests in 4.942 seconds (process running for 6.797)
+2025-11-02T01:13:16.786+01:00  INFO 13796 --- [titreminexcel] [restartedMain] c.m.t.TitreminexcelApplication           : Starting TitreminexcelApplication using Java 21.0.6 with PID 13796 (C:\Users\user\Desktop\titreminexcel-converter-BACKUP\titreminexcel\target\classes started by user in C:\Users\user\Desktop\titreminexcel-converter-BACKUP\titreminexcel)
+2025-11-02T01:13:16.793+01:00  INFO 13796 --- [titreminexcel] [restartedMain] c.m.t.TitreminexcelApplication           : No active profile set, falling back to 1 default profile: "default"
+2025-11-02T01:13:16.834+01:00  INFO 13796 --- [titreminexcel] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-11-02T01:13:16.834+01:00  INFO 13796 --- [titreminexcel] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-11-02T01:13:18.092+01:00  INFO 13796 --- [titreminexcel] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 9091 (http)
+2025-11-02T01:13:18.110+01:00  INFO 13796 --- [titreminexcel] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-11-02T01:13:18.110+01:00  INFO 13796 --- [titreminexcel] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-11-02T01:13:18.156+01:00  INFO 13796 --- [titreminexcel] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-11-02T01:13:18.156+01:00  INFO 13796 --- [titreminexcel] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1322 ms
+2025-11-02T01:13:18.771+01:00  INFO 13796 --- [titreminexcel] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-11-02T01:13:18.771+01:00  INFO 13796 --- [titreminexcel] [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2025-11-02T01:13:18.833+01:00  INFO 13796 --- [titreminexcel] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 9091 (http) with context path '/'
+2025-11-02T01:13:18.848+01:00  INFO 13796 --- [titreminexcel] [restartedMain] c.m.t.TitreminexcelApplication           : Started TitreminexcelApplication in 2.527 seconds (process running for 2.92)
