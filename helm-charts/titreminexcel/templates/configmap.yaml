@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: titreminexcel-config
+data:
+  SPRING_PROFILES_ACTIVE: "prod"
+  APP_WELCOME_MSG: "Bienvenue sur TitreMinExcel 🎉"

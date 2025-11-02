@@ -1,0 +1,6 @@
+2025-11-02T01:12:06.714+01:00  INFO 34324 --- [titreminexcel] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-11-02T01:12:06.856+01:00  INFO 34324 --- [titreminexcel] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-11-02T01:12:40.230+01:00  INFO 42352 --- [titreminexcel] [main] c.m.t.TitreminexcelApplicationTests      : Starting TitreminexcelApplicationTests using Java 21.0.6 with PID 42352 (started by user in C:\Users\user\Desktop\titreminexcel-converter-BACKUP\titreminexcel)
+2025-11-02T01:12:40.241+01:00  INFO 42352 --- [titreminexcel] [main] c.m.t.TitreminexcelApplicationTests      : No active profile set, falling back to 1 default profile: "default"
+2025-11-02T01:12:44.389+01:00  INFO 42352 --- [titreminexcel] [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2025-11-02T01:12:44.501+01:00  INFO 42352 --- [titreminexcel] [main] c.m.t.TitreminexcelApplicationTests      : Started TitreminexcelApplicationTests in 4.942 seconds (process running for 6.797)

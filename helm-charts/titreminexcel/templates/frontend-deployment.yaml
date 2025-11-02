@@ -17,10 +17,9 @@ spec:
       containers:
         - name: frontend
           image: {{ .Values.frontend.image }}
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.frontend.port }}
           env:
             - name: REACT_APP_API_URL
               value: "http://titreminexcel-backend:{{ .Values.backend.port }}"
-

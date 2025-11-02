@@ -1,0 +1,2 @@
+echo "mtedd-xls2json/" >> .gitignore
+echo "titreminexcel/logs/" >> .gitignore

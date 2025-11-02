@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: titreminexcel-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - host: titreminexcel.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: titreminexcel-frontend
+                port:
+                  number: {{ .Values.frontend.port }}
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: titreminexcel-backend
+                port:
+                  number: {{ .Values.backend.port }}
+

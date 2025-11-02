@@ -17,10 +17,23 @@ spec:
       containers:
         - name: backend
           image: {{ .Values.backend.image }}
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.backend.port }}
-          env:
-            - name: SPRING_PROFILES_ACTIVE
-              value: "prod"
-
+          envFrom:
+            - configMapRef:
+                name: titreminexcel-config
+            - secretRef:
+                name: titreminexcel-secret
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.backend.port }}
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.backend.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 5
