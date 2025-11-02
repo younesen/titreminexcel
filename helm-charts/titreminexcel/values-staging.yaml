@@ -1,0 +1,23 @@
+replicaCount: 2
+
+backend:
+  image: younesen/titreminexcel-backend:staging
+  port: 9091
+
+frontend:
+  image: younesen/titreminexcel-frontend:staging
+  port: 80
+
+service:
+  type: ClusterIP
+  frontendNodePort: 0
+  backendNodePort: 0
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: titreminexcel.staging.local
+      paths:
+        - path: /
+          pathType: Prefix
