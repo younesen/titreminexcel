@@ -1,17 +1,18 @@
 replicaCount: 1
-
 backend:
-  image: titreminexcel-backend:local
+  image: younesen/titreminexcel-backend:latest
   port: 9091
-
 frontend:
-  image: titreminexcel-frontend:local
+  image: younesen/titreminexcel-frontend:latest
   port: 80
-
 service:
   type: NodePort
-  frontendNodePort: 31337
-  backendNodePort: 31338
-
+  frontendNodePort: 31317
+  backendNodePort: 31318
 ingress:
-  enabled: false
+  enabled: true
+  hosts:
+    - host: titreminexcel-dev.local
+      paths:
+        - path: /
+          pathType: Prefix

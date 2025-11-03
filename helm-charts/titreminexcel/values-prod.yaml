@@ -1,21 +1,16 @@
 replicaCount: 3
-
 backend:
   image: younesen/titreminexcel-backend:prod
   port: 9091
-
 frontend:
   image: younesen/titreminexcel-frontend:prod
   port: 80
-
 service:
-  type: ClusterIP
-  frontendNodePort: 0
-  backendNodePort: 0
-
+  type: NodePort
+  frontendNodePort: 31337
+  backendNodePort: 31338
 ingress:
   enabled: true
-  className: nginx
   hosts:
     - host: titreminexcel.local
       paths:

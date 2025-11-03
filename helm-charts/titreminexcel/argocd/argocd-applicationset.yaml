@@ -2,23 +2,22 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: titreminexcel-environments
-  namespace: argocd
 spec:
   generators:
     - list:
         elements:
-          - env: dev
-            namespace: dev
-            values: values-dev.yaml
-          - env: staging
-            namespace: staging
-            values: values-staging.yaml
-          - env: prod
-            namespace: prod
-            values: values-prod.yaml
+          - name: dev
+            namespace: titreminexcel-dev
+            valuesFile: values-dev.yaml
+          - name: staging
+            namespace: titreminexcel-staging
+            valuesFile: values-staging.yaml
+          - name: prod
+            namespace: titreminexcel-prod
+            valuesFile: values-prod.yaml
   template:
     metadata:
-      name: titreminexcel-{{ env }}
+      name: titreminexcel-{{name}}
     spec:
       project: default
       source:
@@ -27,10 +26,10 @@ spec:
         path: helm-charts/titreminexcel
         helm:
           valueFiles:
-            - helm-charts/titreminexcel/{{ values }}
+            - "{{valuesFile}}"
       destination:
         server: https://kubernetes.default.svc
-        namespace: "{{ namespace }}"
+        namespace: "{{namespace}}"
       syncPolicy:
         automated:
           prune: true

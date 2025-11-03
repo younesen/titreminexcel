@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e02d6894-d670-4dec-b363-bccaf100efec" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/helm-charts/titreminexcel/argocd/argocd-applicationset.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helm-charts/titreminexcel/templates/_helpers.tpl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helm-charts/titreminexcel/values-dev.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helm-charts/titreminexcel/values-prod.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helm-charts/titreminexcel/values-staging.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helm-charts/titreminexcel/argocd/argocd-applicationset.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/helm-charts/titreminexcel/argocd/argocd-applicationset.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
