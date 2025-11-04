@@ -92,6 +92,26 @@ pipeline {
             }
         }
 
+        stage('Push Helm Update to GitHub') {
+            steps {
+                dir('helm-charts/titreminexcel') {
+                    withCredentials([usernamePassword(
+                        credentialsId: 'github-creds',
+                        usernameVariable: 'GIT_USER',
+                        passwordVariable: 'GIT_PASS'
+                    )]) {
+                        bat """
+                            git config user.name "jenkins"
+                            git config user.email "jenkins@local"
+                            git add values.yaml
+                            git commit -m "Update image tags to ${VERSION_TAG}"
+                            git push https://${GIT_USER}:${GIT_PASS}@github.com/younesen/titreminexcel.git main
+                        """
+                    }
+                }
+            }
+        }
+
         // 🚀 Étape 7 : Déploiement via ArgoCD
         stage('Deploy via ArgoCD') {
             steps {
