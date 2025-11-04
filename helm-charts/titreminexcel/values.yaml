@@ -3,11 +3,11 @@ replicaCount: 1
 versionTag: "1.0.0"
 
 backend:
-  image: "younesen/titreminexcel-backend:{{ .Values.versionTag }}"
+  image: "younesen/titreminexcel-backend:${VERSION_TAG}
   port: 9091
 
 frontend:
-  image: "younesen/titreminexcel-frontend:{{ .Values.versionTag }}"
+  image: "younesen/titreminexcel-frontend:${VERSION_TAG}
   port: 80
 
 service:
