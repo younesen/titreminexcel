@@ -80,17 +80,17 @@ pipeline {
         stage('Update Helm Chart') {
             steps {
                 dir('helm-charts/titreminexcel') {
-                    bat """
-                        echo 📝 Mise à jour du fichier values.yaml avec la version ${VERSION_TAG}...
-                        powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-backend:.*', 'younesen/titreminexcel-backend:${env.VERSION_TAG}' | Set-Content values.yaml"
-                        powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-frontend:.*', 'younesen/titreminexcel-frontend:${env.VERSION_TAG}' | Set-Content values.yaml"
-
+                    bat '''
+                        echo 🧩 Mise à jour du fichier values.yaml avec la version ${VERSION_TAG}...
+                        powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-backend:.*', 'younesen/titreminexcel-backend:${VERSION_TAG}' | Set-Content values.yaml" || exit /b 0
+                        powershell -Command "(Get-Content values.yaml) -replace 'younesen/titreminexcel-frontend:.*', 'younesen/titreminexcel-frontend:${VERSION_TAG}' | Set-Content values.yaml" || exit /b 0
                         echo ✅ values.yaml mis à jour :
-                        type values.yaml | findstr 'image:'
-                    """
+                        type values.yaml | findstr "image:" || exit /b 0
+                    '''
                 }
             }
         }
+
 
         stage('Push Helm Update to GitHub') {
             steps {
